@@ -92,7 +92,7 @@ body {
 }
 
 .header_age {
-    
+
     margin-top: 0px;
     font-size: 2em;
     font-weight: 300;
@@ -175,8 +175,8 @@ body {
     transition: 1s;
 }
 
-.ngaek:hover{
-    outline: 2px dashed #7b68ee; 
+.ngaek:hover {
+    outline: 2px dashed #7b68ee;
     outline-offset: -10px;
 }
 
