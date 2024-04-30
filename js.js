@@ -308,7 +308,13 @@ function go_event(tipe, player){
             zn=rand(aptechka)+5;
             izm_zdorovie(zn,player);
             message_for_pl("Была найдена лекарственная трава. Здоровье "+odd_or_not(zn)+zn,player);
-            break;        
+            break;   
+            
+        case "озеро возрождения":
+            full_healh(player);
+            //убрать все негативные??
+            message_for_pl("Окунулся в озеро возрождения. Здоровье полностью восстановлено",player);
+            break;
 
         case "пластырь":
             zn=rand(zn_plastir)+5;
@@ -370,6 +376,10 @@ function go_event(tipe, player){
             break; 
     }
     draw_on_pole(player.x,player.y,);
+}
+
+function full_healh(player){
+    player.healh=player.max_health;
 }
 
 function ubrat_lacky(player,tipe){
@@ -543,22 +553,22 @@ function prov_hk(player){
 
 //настройка шансов
 var обычный = 50;
-var редкий = 400;
-var уникальный = 3000;
-var легендарный = 20000;
-var мифический = 100000;
+var редкий = 200;
+var уникальный = 1000;
+var легендарный = 5000;
+var мифический = 10000;
 
 function lacky_chance(){
 
     //обычные
     if (rand(обычный)<1){
+        return "болото";
+    }
+    if (rand(обычный)<1){
         return "мухоморы";
     }
     if (rand(обычный)<1){
         return "ловушка";
-    }
-    if (rand(обычный)<1){
-        return "болото";
     }
     if (rand(обычный)<1){
         return "травка";
@@ -613,6 +623,9 @@ function lacky_chance(){
         return "золотое яблоко";
     }
     if (rand(уникальный)<1){
+        return "червивое яблоко";
+    }
+    if (rand(уникальный)<1){
         return "мина";
     }
     if (rand(уникальный)<1){
@@ -623,7 +636,9 @@ function lacky_chance(){
     if (rand(легендарный)<1){
         return "кислотное болото";
     }
-
+    if (rand(легендарный)<1){
+        return "озеро возрождения";
+    }
 
     //мифические
     if (rand(мифический)<1) {
@@ -640,8 +655,8 @@ function lacky_chance(){
     return "";
 }
 
-var тестовый = "дорогое вино";
-var тестовый2 = "винишко";
+var тестовый = "ловушка";
+var тестовый2 = "озеро возрождения";
 
 function what_it_is(what){
     switch(what){
@@ -652,50 +667,118 @@ function what_it_is(what){
             return "<img src='img/компьютер.png'>";
        
         case "аптечка":
-            return "<img src='img/травка.png'>";
+            return "<img src='img/травка.png' "+
+            "title='Редкий&#010; " +
+            "Лекарственная трава + к Здоровью'>";
 
         case "ядовитая трава":
         case "травка":
         case "дорогое вино":
-            return "<img src='img/торговец.png'>";
+            return "<img src='img/торговец.png' "+
+            "title='"+
+            "Обычный&#010;"+
+            " Трава +"+zn_travki+" к Иммунитету"+
+            "&#010;Редкий&#010;"+
+            " Ядовитая трава - к случайной характерстике"+
+            "&#010;Уникальный&#010;"+
+            " Дорогое вино + к случайной характерстике, снятие эффекта кислоты"+
+            "'>";
+
 
         case "змейка":
-            return "<img src='img/змейка.png'>";         
+            return "<img src='img/змейка.png' "+
+            "title='"+
+            "Редкий&#010;"+
+            " Змейка - к Здоровью, наложение эффекта яда"+
+            "'>";       
             
         case "болото":        
         case "ядовитое болото":
         case "кислотная лужа":
         case "кислотное болото":
-            return "<img src='img/лужа.png'>";         
+        case "озеро возрождения":
+            return "<img src='img/лужа.png' "+
+            "title='"+
+            "Обычный&#010;"+
+            " Болото наложение эффекта неподвижности &#010;"+
+            "Редкий&#010;"+
+            " Кислотная лужа - к Здоровью, наложение эффекта кислоты&#010;"+
+            " Ядовитое болото наложение эффектов неподвижности и яда&#010;"+
+            "Легендарный&#010;"+
+            " Кислотное болото наложение эффектов неподвижности и кислоты&#010;"+
+            " Озеро возрождения восстановление здоровья до максимального"+
+            "'>";      
             
         case "ловушка":
         case "мина":        
         case "колючая проволока":
-            return "<img src='img/ловушка.png'>";
+            return "<img src='img/ловушка.png' "+
+            "title='"+
+            "Обычный&#010;"+
+            " Ловушка - к Здоровью &#010;"+
+            "Редкий&#010;"+
+            " Колючая проволока - к Здоровью, наложение эффекта кровотечения&#010;"+
+            "Уникальный&#010;"+
+            " Мина  - к Здоровью, наложение эффекта кровотечения, имеет шанс смертельного исхода&#010;"+
+            "'>"; 
 
         case "мухоморы":
         case "линчжи":
-            return "<img src='img/гриб.png'>";
+            return "<img src='img/гриб.png' "+
+            "title='"+
+            "Обычный&#010;"+
+            " Мухомор - к Здоровью, наложение эффекта отравления &#010;"+
+            "Редкий&#010;"+
+            " Линчжи + к случайной характеристике&#010;"+
+            "'>"; 
 
         case "золотое яблоко":
         case "яблоко":
         case "гнилое яблоко": 
         case "червивое яблоко":
-            return "<img src='img/яблоко.png'>";
+            return "<img src='img/яблоко.png' "+
+            "title='"+
+            "Обычный&#010;"+
+            " Яблоко +"+ zn_apple+" к Здоровью &#010;"+
+            "Редкий&#010;"+
+            " Гнилое яблоко - к Здоровью, наложение эффекта отравления&#010;"+
+            "Уникальный&#010;"+
+            " Червивое яблоко  - к случайной характерстике&#010;"+
+            " Золотое яблоко  + к случайной характерстике&#010;"+
+            "'>"; 
 
         case "единичка к статам":
-            return "<img src='img/пять.png'>"; 
+            return "<img src='img/пять.png' "+
+            "title='"+
+            "Редкий&#010;"+
+            " +5 к случайной характерстике"+
+            "'>"; 
 
         case "пластырь":
-            return "<img src='img/пластырь.png'>";
+            return "<img src='img/пластырь.png' "+
+            "title='"+
+            "Редкий&#010;"+
+            " + к Здоровью, снятие эффекта кровотечения"+
+            "'>"; 
 
         case "вино":
         case "винишко":
-            return "<img src='img/вино.png'>";
+            return "<img src='img/вино.png' "+
+            "title='"+
+            "Обычный&#010;"+
+            " Винишко наложение эффекта опьянения &#010;"+
+            "Редкий&#010;"+
+            " Вино + к случайной характеристике&#010;"+
+            "'>"; 
         
         case "щит Эгиды":
         case "меч Всевластия":
-            return "<img src='img/сундук.png'>";
+            return "<img src='img/сундук.png' "+
+            "title='"+
+            "Мифический&#010;"+
+            " меч Всевластия +100 к атаке &#010;"+
+            " щит Эгиды +100 к защите &#010;"+
+            "'>"; 
 
         default:
             return "";
@@ -738,12 +821,12 @@ function first_and_last_step(){
                     pole[i][j]=rez;
                 } 
 
-                // if (i==0 && j==1){
-                //     pole[i][j]=тестовый;
-                // }
-                // if (i==1 && j==0){
-                //     pole[i][j]=тестовый2;
-                // }
+                if (i==0 && j==1){
+                    pole[i][j]=тестовый;
+                }
+                if (i==1 && j==0){
+                    pole[i][j]=тестовый2;
+                }
                                
             }
         }
@@ -1074,6 +1157,9 @@ function izm_zdorovie(zn, player){
             player.healh=0;
         }
     }
+    if (zn>0 && player.healh>player.max_health){
+        player.max_health=player.healh;
+    }
 }
 
 function izm_immunitet(zn, player){
@@ -1130,6 +1216,54 @@ function nepodvijen(x, player, mess){
     }
 }
 
+document.addEventListener('keydown', (event) => {
+    const key = event.key;
+    switch (key) {
+        case 'ArrowUp':    strelka(2); break;
+        case 'ArrowDown':  strelka(3); break;
+        case 'ArrowLeft':  strelka(0); break;
+        case 'ArrowRight': strelka(1); break;
+    }
+});
+
+function strelka(dirrection){
+
+    switch(dirrection){
+        case 0:
+            if (p1.x==0){
+                break;
+            }
+            else{
+                nextstep(dirrection);
+                break;
+            }
+        case 2:
+            if (p1.y==0){
+                break;
+            }
+            else{
+                nextstep(dirrection);
+                break;
+            }       
+        case 1:
+            if (p1.x==9){
+                break;
+            }
+            else{
+                nextstep(dirrection);
+                break;
+            }   
+        case 3:
+            if (p1.y==9){
+                break;
+            }
+            else{
+                nextstep(dirrection);
+                break;
+            }       
+    }
+}
+
 step = 0;
 var p1,p2;
 
@@ -1143,6 +1277,8 @@ class Player{
         this.critcanse = critcanse;
         this.immunitet = immunitet;
         this.vampirizm = vamp;
+
+        this.max_health = h;
 
         if (n=="игрок"){
             this.x=1;
