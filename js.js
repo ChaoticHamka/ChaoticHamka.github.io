@@ -821,12 +821,12 @@ function first_and_last_step(){
                     pole[i][j]=rez;
                 } 
 
-                if (i==0 && j==1){
-                    pole[i][j]=тестовый;
-                }
-                if (i==1 && j==0){
-                    pole[i][j]=тестовый2;
-                }
+                // if (i==0 && j==1){
+                //     pole[i][j]=тестовый;
+                // }
+                // if (i==1 && j==0){
+                //     pole[i][j]=тестовый2;
+                // }
                                
             }
         }
