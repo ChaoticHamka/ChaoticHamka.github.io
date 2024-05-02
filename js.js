@@ -1,38 +1,14 @@
-function step_lv(player){
-    draw_on_pole(player.x,player.y,);
-    player.x--;
-}
-function step_pr(player){
-    draw_on_pole(player.x,player.y,);
-    player.x++;
-}
-function step_vv(player){
-    draw_on_pole(player.x,player.y,);
-    player.y--;
-}
-function step_vn(player){
-    draw_on_pole(player.x,player.y,);
-    player.y++;
-}
-
-function whatdirrection(player, direction){
-    if (direction==0){
-        step_lv(player);
-    }
-    else if (direction==1){
-        step_pr(player);
-    }
-    else if (direction==2){
-        step_vv(player);
-    }
-    else if (direction==3){
-        step_vn(player);
-    }
-}
-
 function nextstep(direction)
 {
+    $("#pl_info_battle").hide();
+    $("#pc_info_battle").hide();
+    $("#pl_info_battle_monstr").hide();
+    $("#pc_info_battle_monstr").hide();
+
     step++; 
+
+    document.getElementById("step_nom").innerHTML=step;
+
     svet_in_the_dark(p1.x,p1.y,0);
     if (!lacky_has(p1,"Неподвижность")){
         if(!lacky_has(p1,"Опьянение")){
@@ -48,8 +24,9 @@ function nextstep(direction)
             whatdirrection(p1, direction);
         }
     }
-    p1.info=[];
-    p2.info=[];   
+
+    p1.chistka();
+    p2.chistka();
 
     //начало хода
     first_step(p1);
@@ -59,6 +36,7 @@ function nextstep(direction)
     if (!Are_they_alive(p1, p2)){
         document.getElementById("contbutton").setAttribute("class","contbutton_hide");
         document.getElementById("Button_NG").removeAttribute("hidden");
+        gameover=true;
     }
     else{
         //действия игрока
@@ -68,7 +46,9 @@ function nextstep(direction)
         if (!lacky_has(p2,"Неподвижность")){
             p2.healh+=vost_pc_k_hod();
             //document.getElementById("pole"+(p2.x)+"x"+p2.y).setAttribute("class","cell");
+            
             whatdirrection(p2, what_pc_dirrection(p2.x,p2.y));
+            
             //document.getElementById("pole"+(p2.x)+"x"+p2.y).setAttribute("class","stolbtsi");
             is_it_event(p2);
         }
@@ -78,6 +58,7 @@ function nextstep(direction)
         if (!Are_they_alive(p1, p2)){
             document.getElementById("contbutton").setAttribute("class","contbutton_hide");
             document.getElementById("Button_NG").removeAttribute("hidden");
+            gameover=true;
         }
         else {
             if (p2.x == p1.x && p2.y==p1.y){
@@ -107,12 +88,6 @@ function nextstep(direction)
 
     svet_in_the_dark(p1.x,p1.y,1);
     draw_on_pole(p1.x,p1.y,p1.name);
-}
-
-var max_vost_pc_k_hod=5;
-
-function vost_pc_k_hod(){
-    return rand(max_vost_pc_k_hod);
 }
 
 function first_step(player){
@@ -348,6 +323,12 @@ function go_event(tipe, player){
             zn=zn_travki;
             izm_immunitet(zn,player);
             message_for_pl("Торговец не обманул! Эта трава и правда повышает иммунитет. Иммунитет "+odd_or_not(zn)+zn,player);      
+            break;         
+            
+        case "добрые вампиры":
+            zn=5;
+            player.vampirizm+=5;
+            message_for_pl("Торговцы оказались дружелюбными вампирами! Вампиризм "+odd_or_not(zn)+zn,player);      
             break; 
 
         case "единичка к статам":
@@ -374,16 +355,29 @@ function go_event(tipe, player){
             lucky_event(-1, player, tipe);
             message_for_pl("Вот это удача! Найден щит Эгиды! Защита +"+zn, player);
             break; 
+
+        //Враги
+        case "Змий":
+            rnd_zn=rand(step/10)+Math.floor(step/20);
+            if(rnd_zn<50) rnd_zn=50;
+            healh=rnd_zn;
+            rnd_zn=Math.floor(rnd_zn/10);
+            enemy = new Player("Змий", healh, rand(rnd_zn)+5, rand(rnd_zn)+5, rand(rnd_zn)+15, rand(rnd_zn)+5, 0, rand(rnd_zn)+5);
+            Battle(player,enemy);
+            break;
+
+        case "Гриб-убийца":
+            rnd_zn=rand(step/10)+Math.floor(step/20);
+            if(rnd_zn<50) rnd_zn=50;
+            healh=rnd_zn;
+            rnd_zn=Math.floor(rnd_zn/10);
+            enemy = new Player("Гриб-убийца", healh, rand(rnd_zn)+10, rand(rnd_zn)+10, rand(rnd_zn)+10, rand(rnd_zn)+10, 0, rand(rnd_zn)+5);
+            Battle(player,enemy);
+            break;
     }
+
+
     draw_on_pole(player.x,player.y,);
-}
-
-function full_healh(player){
-    player.healh=player.max_health;
-}
-
-function ubrat_lacky(player,tipe){
-    player.lacky.delete(tipe);
 }
 
 //настройка данных
@@ -466,7 +460,10 @@ function rand_hka_plus(player, zn0, tipe){
             break;      
         case "золотое яблоко":
             mess= "Вот это удача! Попалось золотое яблоко! "
-            break;    
+            break;          
+        case "вино":
+            mess= "Прекрасное вино! "
+            break;   
         case "дорогое вино кислота":
             mess= "Торговец хорош! Вино просто отличное! Рана из-за кислоты больше не болит. "
             break;        
@@ -534,23 +531,6 @@ function rand_hka_minus(player, zn0, tipe){
     message_for_pl(mess+hka+zn, player);
 }
 
-function prov_hk(player){
-    if (player.healh<0){player.healh=0;}
-    if (player.power<0){player.power=0;}
-    if (player.defen<0){player.defen=0;}
-    if (player.agility<0){player.agility=0;}
-    if (player.critcanse<0){player.critcanse=0;}
-    if (player.vampirizm<0){player.vampirizm=0;}
-
-    if (lacky_has(player, "меч Всевластия")){
-        if (player.power<mif_zn){player.power=mif_zn;}
-    }
-    if (lacky_has(player, "щит Эгиды")){
-        if (player.defen<mif_zn){player.defen=mif_zn;}
-    }
-    
-}
-
 //настройка шансов
 var обычный = 50;
 var редкий = 200;
@@ -579,11 +559,11 @@ function lacky_chance(){
     if (rand(обычный)<1){
         return "винишко";
     }
-
-    //редкие
-    if (rand(редкий)<1){
+    if (rand(обычный)<1){
         return "змейка";
     }
+
+    //редкие
     if (rand(редкий)<1){
         return "единичка к статам";
     }
@@ -613,6 +593,15 @@ function lacky_chance(){
     }
     if (rand(редкий)<1){
         return "вино";
+    }
+    if (rand(редкий)<1){
+        return "Змий";
+    }
+    if (rand(редкий)<1){
+        return "Гриб-убийца";
+    }
+    if (rand(редкий)<1){
+        return "добрые вампиры";
     }
 
     //уникальные
@@ -655,7 +644,7 @@ function lacky_chance(){
     return "";
 }
 
-var тестовый = "ловушка";
+var тестовый = "Змий";
 var тестовый2 = "озеро возрождения";
 
 function what_it_is(what){
@@ -674,22 +663,29 @@ function what_it_is(what){
         case "ядовитая трава":
         case "травка":
         case "дорогое вино":
+        case "добрые вампиры":
             return "<img src='img/торговец.png' "+
             "title='"+
             "Обычный&#010;"+
             " Трава +"+zn_travki+" к Иммунитету"+
             "&#010;Редкий&#010;"+
             " Ядовитая трава - к случайной характерстике"+
+            " Добрые вампиры +5 к Вампиризму"+
             "&#010;Уникальный&#010;"+
             " Дорогое вино + к случайной характерстике, снятие эффекта кислоты"+
             "'>";
 
 
         case "змейка":
+        case "Змий":
             return "<img src='img/змейка.png' "+
             "title='"+
-            "Редкий&#010;"+
-            " Змейка - к Здоровью, наложение эффекта яда"+
+            "Обычный&#010;"+
+            " Змейка - к Здоровью, наложение эффекта яда&#010;"+
+            "Враг&#010;"+
+            " Змий &#010;"+
+            "  Здоровье 50+ &#010;"+
+            "  Х-ки 5+, скорость 15+ &#010;"+
             "'>";       
             
         case "болото":        
@@ -724,12 +720,17 @@ function what_it_is(what){
 
         case "мухоморы":
         case "линчжи":
+        case "Гриб-убийца":
             return "<img src='img/гриб.png' "+
             "title='"+
             "Обычный&#010;"+
             " Мухомор - к Здоровью, наложение эффекта отравления &#010;"+
             "Редкий&#010;"+
             " Линчжи + к случайной характеристике&#010;"+
+            "Враг&#010;"+
+            " Гриб-убийца &#010;"+
+            "  Здоровье 50+ &#010;"+
+            "  Х-ки 10+, вампиризм 5+ &#010;"+
             "'>"; 
 
         case "золотое яблоко":
@@ -840,45 +841,9 @@ function first_and_last_step(){
         document.getElementById("pc_stats").innerHTML=p2.str();
 }
 
-function has_no(tipe){
-    for (x of p1.lacky) {
-        if(x[0]==tipe){
-            return false;
-        }
-    }
-    for (x of p2.lacky) {
-        if(x[0]==tipe){
-            return false;
-        }
-    }
-
-    return has_pole_zn(tipe);
-}
-
-function lacky_has(player, tipe){
-    for (x of player.lacky) {
-        if(x[0]==tipe){
-            return true;
-        }
-    }
-}
-
-function has_pole_zn(tipe){
-    for (i=0;i<10;i++){
-        for (j=0;j<10;j++){
-            if (pole[i][j]==tipe){
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function set_lacky_event(zn_st,player, tipe){
-    player.lacky.set(tipe, player.lacky.has(tipe) ? player.lacky.get(tipe) + zn_st : zn_st);
-}
-
 function Battle0(){
+    message_for_pl("Встреча с компьютером!", p1);
+    message_for_pl("Встреча с игроком!", p2);
     for (i=0;i<10;i++){
         ataka0(p1,p2);
         ataka0(p2,p1);
@@ -887,7 +852,11 @@ function Battle0(){
                 continue;
             }
             else {
-                message_for_pl("Враг сбежал", p1);
+                battle_message_for_pl("Враг сбежал", p1);
+                battle_itog(p1);
+                battle_itog(p2);
+                vivod_battle(p1);
+                vivod_battle(p2);
                 while (true){
                     lucky_x = rand(10);
                     lucky_y = rand(10);
@@ -905,16 +874,88 @@ function Battle0(){
         else {
             document.getElementById("contbutton").setAttribute("class","contbutton_hide");
             document.getElementById("Button_NG").removeAttribute("hidden");
+            gameover=true;
             break;
         }
    }
+}
+
+function Battle(player, enemy){
+    message_for_pl("Встреча с врагом! <br><br>" + enemy.name, player);
+    message_for_pl(enemy.str(), player);
+    hod=0;
+    while(true){
+        hod++;
+        if(hod<=100){
+            ataka0(player,enemy);
+            ataka0(enemy,player);
+            if(!enemy.isAlife()){
+                if (player.isAlife()){
+                    battle_itog_monstr(player);
+                    vivod_battle_monstr(player);
+                    delete enemy;
+                    break;
+                }
+            }
+            if(!player.isAlife()){
+                document.getElementById("contbutton").setAttribute("class","contbutton_hide");
+                document.getElementById("Button_NG").removeAttribute("hidden");
+                battle_itog_monstr(player);
+                gameover=true;
+                break;    
+            }
+        }
+        else {
+            battle_message_for_pl("Враг сбежал", player);
+            battle_itog_monstr(player);
+            vivod_battle_monstr(player);
+            delete enemy;
+            break;
+        }
+        
+    }
+   
+}
+
+function battle_itog(player){
+    
+    player.rez_battle_info[player.rez_battle_info.length]="Итоговый урон: " + (player.rez_battle.get("урон")-player.rez_battle.get("вампиризмУ"));
+    // if (player.rez_battle.get("вампиризмУ")>0){
+    //     player.rez_battle_info[player.rez_battle_info.length]="Нанесено вампиризмом: " + player.rez_battle.get("вампиризмУ");
+    // }
+    if (player.rez_battle.get("вампиризмЗ")>0){
+        player.rez_battle_info[player.rez_battle_info.length]="Восстановлено вампиризмом: " + player.rez_battle.get("вампиризмЗ");
+    }
+    message_for_pl(
+        "<div onclick='showblock(\""+player.name+"\",0);' class='pointer_class'> &#010;"+
+        player.str_rez_battle_info() + 
+        "</div>"
+        ,player
+    );
+}
+
+function battle_itog_monstr(player){
+    
+    player.rez_battle_info[player.rez_battle_info.length]="Итоговый урон: " + (player.rez_battle.get("урон")-player.rez_battle.get("вампиризмУ"));
+    // if (player.rez_battle.get("вампиризмУ")>0){
+    //     player.rez_battle_info[player.rez_battle_info.length]="Нанесено вампиризмом: " + player.rez_battle.get("вампиризмУ");
+    // }
+    if (player.rez_battle.get("вампиризмЗ")>0){
+        player.rez_battle_info[player.rez_battle_info.length]="Восстановлено вампиризмом: " + player.rez_battle.get("вампиризмЗ");
+    }
+    message_for_pl(
+        "<div onclick='showblock(\""+player.name+"\",1);' class='pointer_class'> &#010;"+
+        player.str_rez_battle_info() + 
+        "</div>"
+        ,player
+    );
 }
 
 //для боя
 var stepen_crita=10;
 var zn_crita=1.5;
 var stepen_uklona=10;
-var stepen_vamp=10;
+var stepen_vamp=100;
 var zn_vamp=10;
 
 function ataka0(player,enemy){
@@ -929,7 +970,10 @@ function ataka0(player,enemy){
         izm_zdorovie(-player.vampirizm,enemy);
         izm_zdorovie(power,player);
 
-        message_for_pl("Сработал вампиризм! Здоровье -" +player.vampirizm +". Враг восстановился на +" + power,enemy);        
+        enemy.rez_battle.set("вампиризмУ", enemy.rez_battle.get("вампиризмУ")+player.vampirizm);
+        player.rez_battle.set("вампиризмЗ", player.rez_battle.get("вампиризмЗ")+power);
+
+        battle_message_for_pl("Сработал вампиризм! Здоровье -" +player.vampirizm +". Враг восстановился на +" + power,enemy);        
     }
     else {
         //Атака
@@ -940,7 +984,7 @@ function ataka0(player,enemy){
         if (player.critcanse>rand(max) || player.critcanse>=max){
             power*=zn_crita;
             power=Math.floor(power);
-            mess+="Крит! "
+            mess+="Крит! ";
         }
 
         //защита
@@ -957,124 +1001,13 @@ function ataka0(player,enemy){
             if (zn_ataki<0){
                 izm_zdorovie(zn_ataki,enemy);
                 mess+="Атака на "+ zn_ataki + " к очкам зрововья";
+                enemy.rez_battle.set("урон", enemy.rez_battle.get("урон")+zn_ataki);        
             }
             else {
             mess+="Атака не прошла защиту";
             }
         }
-        message_for_pl(mess, enemy);
-    }
-}
-
-function ataka_monstr(player,monstr){
-    power=player.power;
-    defen=monstr.defen;
-    zn_ataki_player=defen-power;
-
-    power=monstr.power;
-    defen=player.defen;
-    zn_ataki_monstr=defen-power;
-
-    text_mess="";
-    if (zn_ataki_player<0){
-        izm_zdorovie(zn_ataki,enemy);
-        message_for_pl("Атака на "+ zn_ataki + " к очкам зрововья", enemy);
-    }
-    else {
-        message_for_pl("Атака не прошла защиту", enemy);
-    }
-}
-
-function poisk_min(x,y){
-    return Math.min(x,y);
-}
-
-function poisk_max(x,y){
-    return Math.max(x,y);
-}
-
-function rand(max) {
-    return Math.floor(Math.random() * max);
-}
-
-function what_pc_dirrection(x,y){
-    dirrection=rand(4);
-    if (x==0 && dirrection==0){
-        dirrection=1;
-    }
-    if (y==0 && dirrection==2){
-        dirrection=3;
-    }
-    if (x==9 && dirrection==1){
-        dirrection=0;
-    }
-    if (y==9 && dirrection==3){
-        dirrection=2;
-    }
-    return dirrection;
-}
-
-function svet_in_the_dark(x,y,what){
-    if (what==0){
-        if (x!=0){
-            document.getElementById("pole"+(x-1)+"x"+y).setAttribute("class","cell");
-        }
-        if (x!=9){
-            document.getElementById("pole"+(x+1)+"x"+y).setAttribute("class","cell");
-        }
-        if (y!=0){
-            document.getElementById("pole"+x+"x"+(y-1)).setAttribute("class","cell");
-        }
-        if (y!=9){
-            document.getElementById("pole"+x+"x"+(y+1)).setAttribute("class","cell");
-        }
-        document.getElementById("pole"+x+"x"+y).setAttribute("class","cell");
-    }
-    if (what==1){
-        if (x!=0){
-            help_for_svet(x-1,y);
-        }
-        if (x!=9){
-            help_for_svet(x+1,y);
-        }
-        if (y!=0){
-            help_for_svet(x,y-1);
-        }
-        if (y!=9){
-            help_for_svet(x,y+1);
-        }
-        document.getElementById("pole"+x+"x"+y).setAttribute("class","stolbtsi");
-        draw_on_pole(x,y,pole[x][y]);
-        
-        //рисование компьютера на "уголках"
-        if(x>0 && y>0){
-            if((p1.x-1==p2.x)&&(p1.y-1==p2.y)){
-                draw_on_pole(x-1,y-1,p2.name);
-            }
-        }
-        if(x>0 && y<9){
-            if((p1.x-1==p2.x)&&(p1.y+1==p2.y)){
-                draw_on_pole(x-1,y+1,p2.name);
-            }
-        }
-        if(x<9 && y<9){
-            if((p1.x+1==p2.x)&&(p1.y+1==p2.y)){
-                draw_on_pole(x+1,y+1,p2.name);
-            }
-        }
-        if(x<9 && y>0){
-            if((p1.x+1==p2.x)&&(p1.y-1==p2.y)){
-                draw_on_pole(x+1,y-1,p2.name);
-            }
-        }
-    }
-}
-
-function help_for_svet(x,y){
-    document.getElementById("pole"+(x)+"x"+y).setAttribute("class","stolbtsi");
-    draw_on_pole(x,y,pole[x][y]);
-    if(p2.x==x && p2.y==y){
-        draw_on_pole(x,y,p2.name);
+        battle_message_for_pl(mess, enemy);
     }
 }
 
@@ -1099,168 +1032,30 @@ function Are_they_alive(player, pc){
     return true;
 }
 
-function is_it_event(player){
-    if (pole[player.x][player.y]!="Ничего"){
-        go_event(pole[player.x][player.y],player);
-        pole[player.x][player.y]="Ничего";
-    }
-}
-
-function draw_on_pole(x,y,what){
-    document.getElementById("pole"+x+"x"+y).innerHTML=what_it_is(what);
-}
-
-function prov_buttons(x,y){
-    if (x==0){
-        document.getElementById("buttonLv").setAttribute("class","button_hide");
-    }
-    else {
-        document.getElementById("buttonLv").setAttribute("class","button");
-    }
-    if (y==0){
-        document.getElementById("buttonVv").setAttribute("class","button_hide");
-    }
-    else {
-        document.getElementById("buttonVv").setAttribute("class","button");
-    }
-    if (x==9){
-        document.getElementById("buttonPr").setAttribute("class","button_hide");
-    }
-    else {
-        document.getElementById("buttonPr").setAttribute("class","button");
-    }
-    if (y==9){
-        document.getElementById("buttonVn").setAttribute("class","button_hide");
-    }
-    else {
-        document.getElementById("buttonVn").setAttribute("class","button");
-    }
-}
-
 function message_for_pl(mess, player){
     player.info[player.info.length]="<b>"+mess+"</b>";
 }
 
-function vivod_event(player){
+function battle_message_for_pl(mess, player){
+    player.battle_info[player.battle_info.length]="<b>"+mess+"</b>";
+}
+
+function vivod_battle(player){
     if (player.name=="игрок"){
-        document.getElementById("pl_info").innerHTML=p1.str_info();
+        document.getElementById("pl_info_battle").innerHTML=p1.str_battle_info();
     }
     if (player.name=="компьютер"){
-        document.getElementById("pc_info").innerHTML=p2.str_info();
+        document.getElementById("pc_info_battle").innerHTML=p2.str_battle_info();
     }
 }
 
-function izm_zdorovie(zn, player){
-    player.healh+=zn;
-    if (zn<0){
-        if (!player.isAlife()){
-            player.healh=0;
-        }
+function vivod_battle_monstr(player){
+
+    if (player.name=="игрок"){
+        document.getElementById("pl_info_battle_monstr").innerHTML=p1.str_battle_info();
     }
-    if (zn>0 && player.healh>player.max_health){
-        player.max_health=player.healh;
-    }
-}
-
-function izm_immunitet(zn, player){
-    player.immunitet+=zn;
-}
-
-function izm_ataki(zn, player){
-    player.power+=zn;
-}
-
-function izm_defen(zn, player){
-    player.defen+=zn;
-}
-
-function odd_or_not(zn){
-    if (zn>=0) {
-        return "+";
-    }
-    else return "";
-}
-
-function unluckyPlayer(x, player, mess){
-
-    if(player.has_immunitet()){
-        izm_zdorovie(-player.lacky.get(x[0])+1, player);
-    }
-    else{
-        izm_zdorovie(-player.lacky.get(x[0])-1, player);
-    }
-    player.immunitet--;
-    player.lacky.set(x[0],x[1]-1);
-    if (player.lacky.get(x[0])==0){
-        player.lacky.delete(x[0]);
-        message_for_pl(mess, player);
-    }
-}
-
-function poterya_krovi(x, player, mess){
-
-    izm_zdorovie(-player.lacky.get(x[0]), player);
-    //сделать возможность заражения?
-    player.lacky.set(x[0],x[1]-1);
-    if (player.lacky.get(x[0])==0){
-        player.lacky.delete(x[0]);
-        message_for_pl(mess, player);
-    }
-}
-
-function nepodvijen(x, player, mess){
-    player.lacky.set(x[0],x[1]-1);
-    if (player.lacky.get(x[0])==0){
-        player.lacky.delete(x[0]);
-        message_for_pl(mess, player);
-    }
-}
-
-document.addEventListener('keydown', (event) => {
-    const key = event.key;
-    switch (key) {
-        case 'ArrowUp':    strelka(2); break;
-        case 'ArrowDown':  strelka(3); break;
-        case 'ArrowLeft':  strelka(0); break;
-        case 'ArrowRight': strelka(1); break;
-    }
-});
-
-function strelka(dirrection){
-
-    switch(dirrection){
-        case 0:
-            if (p1.x==0){
-                break;
-            }
-            else{
-                nextstep(dirrection);
-                break;
-            }
-        case 2:
-            if (p1.y==0){
-                break;
-            }
-            else{
-                nextstep(dirrection);
-                break;
-            }       
-        case 1:
-            if (p1.x==9){
-                break;
-            }
-            else{
-                nextstep(dirrection);
-                break;
-            }   
-        case 3:
-            if (p1.y==9){
-                break;
-            }
-            else{
-                nextstep(dirrection);
-                break;
-            }       
+    if (player.name=="компьютер"){
+        document.getElementById("pc_info_battle_monstr").innerHTML=p2.str_battle_info();
     }
 }
 
@@ -1284,15 +1079,33 @@ class Player{
             this.x=1;
             this.y=1;
         }
-        else {
+        else if (n=="компьютер"){
             this.x=8;
             this.y=8;
         }
 
 
         this.lacky = new Map();
+        this.rez_battle = new Map([
+            ["урон", 0],
+            ["вампиризмУ", 0],
+            ["вампиризмЗ", 0],
+            ["уклонение",  0]
+          ]);
         this.info = [];
+        this.rez_battle_info = [];
+        this.battle_info = [];
 
+    }
+
+    chistka(){
+        this.info = [];
+        this.rez_battle_info = [];
+        this.battle_info = [];
+        this.rez_battle.set("урон", 0);
+        this.rez_battle.set("вампиризмУ", 0);
+        this.rez_battle.set("вампиризмЗ", 0);
+        this.rez_battle.set("уклонение", 0);
     }
 
     isAlife() {
@@ -1336,6 +1149,36 @@ class Player{
             for (let x of this.info) {
                 info_str += "<br>";
                 info_str += x;
+            }
+        }
+
+
+        return info_str;
+    }
+
+    str_rez_battle_info() {
+
+        let info_str = "";
+
+        if (this.rez_battle_info.length > 0) {
+            for (let x of this.rez_battle_info) {
+                info_str += x;
+                info_str += "<br>";
+            }
+        }
+
+
+        return info_str;
+    }
+
+    str_battle_info() {
+
+        let info_str = "";
+
+        if (this.battle_info.length > 0) {
+            for (let x of this.battle_info) {
+                info_str += x;   
+                info_str += "<br>";             
             }
         }
 

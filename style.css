@@ -12,6 +12,18 @@ body{
     background-color: lightblue;
 }
 
+.step{
+    font-size: large;
+    display: flex;
+    align-items: end;
+    font-weight: bold;
+}
+
+#step_nom{
+    padding-left: 20px;
+    font-size: larger;
+}
+
 .gamepole{
     padding-top: 50px;
     padding-left: 30px;
@@ -110,4 +122,19 @@ body{
 img{
     width: 90%;
     height: 90%;
+}
+
+.pointer_class{
+    cursor: pointer;
+}
+
+#pl_info_battle_monstr, #pc_info_battle_monstr,
+#pl_info_battle, #pc_info_battle{
+    display: none;
+    border: yellowgreen solid 3px;
+    background-color: lightyellow;
+    border-radius: 10px;
+    box-shadow:  0px 0px 20px 5px cornsilk ;
+    margin: 10px 0px;
+    padding: 10px;
 }
