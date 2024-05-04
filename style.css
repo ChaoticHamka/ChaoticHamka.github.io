@@ -17,6 +17,7 @@ body{
     display: flex;
     align-items: end;
     font-weight: bold;
+    margin: 30px;
 }
 
 #step_nom{
