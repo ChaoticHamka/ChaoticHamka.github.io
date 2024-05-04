@@ -28,11 +28,26 @@ body{
     padding-top: 50px;
     padding-left: 30px;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-template-areas:
+    "a b c"
+}
+
+.plinfo, .pcinfo{
+    margin: 20px;
 }
 
 .plinfo{
-    width: 90%;
+    grid-area: a;
+}
+
+.igrovoe_pole{
+    grid-area: b;
+}
+
+.pcinfo{
+    grid-area: c;
 }
 
 .plname{
@@ -43,6 +58,7 @@ body{
 .contbutton, .contbutton_hide{
     margin: 20px auto;
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(4, 50px);
     grid-template-rows: repeat(3, 1fr);
     grid-template-areas:
