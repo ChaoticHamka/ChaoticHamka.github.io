@@ -901,6 +901,7 @@ function Battle(player, enemy){
                 document.getElementById("contbutton").setAttribute("class","contbutton_hide");
                 document.getElementById("Button_NG").removeAttribute("hidden");
                 battle_itog_monstr(player);
+                vivod_battle_monstr(player);
                 gameover=true;
                 break;    
             }
