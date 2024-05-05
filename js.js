@@ -416,43 +416,34 @@ function rand_hka_plus(player, zn0, tipe){
     hka="";
     zn=rand(zn0)+5;
 
-    switch(rand(7)){
+    switch(rand(5)){
+  
         case 0:
-            //здоровье
-            zn*=(rand(sten_umnoj_zdr)+1);
-            player.healh+=zn;
-            hka="Здоровье +";  
-            break;     
-        case 1:
             //Атака
             player.power+=zn;
             hka="Атака +";     
             break;   
-        case 2:
+        case 1:
             //Защита
             player.defen+=zn;
             hka="Защита +";    
             break;    
-        case 3:
+        case 2:
             //Ловкость
             player.agility+=zn;
             hka="Ловкость +";       
             break; 
-        case 4:
+        case 3:
             //Шанс крита
             player.critcanse+=zn;
             hka="Шанс крита +";    
             break;    
-        case 5:
+        case 4:
             //Вампиризм
             player.vampirizm+=zn;
             hka="Вампиризм +";
             break;        
-        case 6:
-            //Иммунитет
-            player.immunitet+=zn;
-            hka="Иммунитет +";
-            break;
+
     }
     switch(tipe){
         case "линчжи":
