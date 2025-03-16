@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRK</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="js.js" type="text/javascript"></script>
+    <script src="js2.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body onload="first_and_last_step()">
+    <div class="step">Шаг <div id="step_nom">0</div></div>
+    <div class="gamepole">        
+    <div class="plinfo">
+        <div class="Button_NG" id="Button_NG" onclick="location.reload(); return false;" hidden>
+            Новая игра
+        </div>
+
+        <div class="plname">Игрок</div>
+        <div id="pl_stats">Статы</div>
+        <div id="pl_info"></div>
+        <div id="pl_info_battle_monstr"></div>
+        <div id="pl_info_battle"></div>
+        
+    </div>
+<div class="igrovoe_pole">
+
+        <div class="pole">
+            <div class="stroki">
+                <div class="cell" id="pole0x0"></div>
+                <div class="cell" id="pole1x0"></div>
+                <div class="cell" id="pole2x0"></div>
+                <div class="cell" id="pole3x0"></div>
+                <div class="cell" id="pole4x0"></div>
+                <div class="cell" id="pole5x0"></div>
+                <div class="cell" id="pole6x0"></div>
+                <div class="cell" id="pole7x0"></div>
+                <div class="cell" id="pole8x0"></div>
+                <div class="cell" id="pole9x0"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x1"></div>
+                <div class="cell" id="pole1x1"></div>
+                <div class="cell" id="pole2x1"></div>
+                <div class="cell" id="pole3x1"></div>
+                <div class="cell" id="pole4x1"></div>
+                <div class="cell" id="pole5x1"></div>
+                <div class="cell" id="pole6x1"></div>
+                <div class="cell" id="pole7x1"></div>
+                <div class="cell" id="pole8x1"></div>
+                <div class="cell" id="pole9x1"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x2"></div>
+                <div class="cell" id="pole1x2"></div>
+                <div class="cell" id="pole2x2"></div>
+                <div class="cell" id="pole3x2"></div>
+                <div class="cell" id="pole4x2"></div>
+                <div class="cell" id="pole5x2"></div>
+                <div class="cell" id="pole6x2"></div>
+                <div class="cell" id="pole7x2"></div>
+                <div class="cell" id="pole8x2"></div>
+                <div class="cell" id="pole9x2"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x3"></div>
+                <div class="cell" id="pole1x3"></div>
+                <div class="cell" id="pole2x3"></div>
+                <div class="cell" id="pole3x3"></div>
+                <div class="cell" id="pole4x3"></div>
+                <div class="cell" id="pole5x3"></div>
+                <div class="cell" id="pole6x3"></div>
+                <div class="cell" id="pole7x3"></div>
+                <div class="cell" id="pole8x3"></div>
+                <div class="cell" id="pole9x3"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x4"></div>
+                <div class="cell" id="pole1x4"></div>
+                <div class="cell" id="pole2x4"></div>
+                <div class="cell" id="pole3x4"></div>
+                <div class="cell" id="pole4x4"></div>
+                <div class="cell" id="pole5x4"></div>
+                <div class="cell" id="pole6x4"></div>
+                <div class="cell" id="pole7x4"></div>
+                <div class="cell" id="pole8x4"></div>
+                <div class="cell" id="pole9x4"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x5"></div>
+                <div class="cell" id="pole1x5"></div>
+                <div class="cell" id="pole2x5"></div>
+                <div class="cell" id="pole3x5"></div>
+                <div class="cell" id="pole4x5"></div>
+                <div class="cell" id="pole5x5"></div>
+                <div class="cell" id="pole6x5"></div>
+                <div class="cell" id="pole7x5"></div>
+                <div class="cell" id="pole8x5"></div>
+                <div class="cell" id="pole9x5"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x6"></div>
+                <div class="cell" id="pole1x6"></div>
+                <div class="cell" id="pole2x6"></div>
+                <div class="cell" id="pole3x6"></div>
+                <div class="cell" id="pole4x6"></div>
+                <div class="cell" id="pole5x6"></div>
+                <div class="cell" id="pole6x6"></div>
+                <div class="cell" id="pole7x6"></div>
+                <div class="cell" id="pole8x6"></div>
+                <div class="cell" id="pole9x6"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x7"></div>
+                <div class="cell" id="pole1x7"></div>
+                <div class="cell" id="pole2x7"></div>
+                <div class="cell" id="pole3x7"></div>
+                <div class="cell" id="pole4x7"></div>
+                <div class="cell" id="pole5x7"></div>
+                <div class="cell" id="pole6x7"></div>
+                <div class="cell" id="pole7x7"></div>
+                <div class="cell" id="pole8x7"></div>
+                <div class="cell" id="pole9x7"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x8"></div>
+                <div class="cell" id="pole1x8"></div>
+                <div class="cell" id="pole2x8"></div>
+                <div class="cell" id="pole3x8"></div>
+                <div class="cell" id="pole4x8"></div>
+                <div class="cell" id="pole5x8"></div>
+                <div class="cell" id="pole6x8"></div>
+                <div class="cell" id="pole7x8"></div>
+                <div class="cell" id="pole8x8"></div>
+                <div class="cell" id="pole9x8"></div>
+            </div>
+            <div class="stroki">
+                <div class="cell" id="pole0x9"></div>
+                <div class="cell" id="pole1x9"></div>
+                <div class="cell" id="pole2x9"></div>
+                <div class="cell" id="pole3x9"></div>
+                <div class="cell" id="pole4x9"></div>
+                <div class="cell" id="pole5x9"></div>
+                <div class="cell" id="pole6x9"></div>
+                <div class="cell" id="pole7x9"></div>
+                <div class="cell" id="pole8x9"></div>
+                <div class="cell" id="pole9x9"></div>
+            </div>
+
+    </div>
+    <div class="contbutton" id="contbutton">
+        <div class="button" id="buttonVv" onclick="nextstep(2)">
+            Вверх
+        </div>
+        <div class="button" id="buttonLv" onclick="nextstep(0)">
+            Влево
+        </div>
+        <div class="button" id="buttonPr" onclick="nextstep(1)">
+            Вправо
+        </div>
+        <div class="button" id="buttonVn" onclick="nextstep(3)">
+            Вниз
+        </div>
+    </div>
+</div>
+
+    <div class="pcinfo">
+
+        <div class="plname">Компьютер</div>
+        <div id="pc_stats">Статы</div>
+        <div id="pc_info"></div>
+        <div id="pc_info_battle_monstr"></div>
+        <div id="pc_info_battle"></div>
+    </div>
+
+
+    </div>
+
+    
+   
+</body>
+</html>

@@ -1,0 +1,157 @@
+*{
+    margin: 0;
+    padding: 0;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body{
+    background-color: lightblue;
+}
+
+.step{
+    font-size: large;
+    display: flex;
+    align-items: end;
+    font-weight: bold;
+    margin: 30px;
+}
+
+#step_nom{
+    padding-left: 20px;
+    font-size: larger;
+}
+
+.gamepole{
+    padding-top: 50px;
+    padding-left: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-template-areas:
+    "a b c"
+}
+
+.plinfo, .pcinfo{
+    margin: 20px;
+}
+
+.plinfo{
+    grid-area: a;
+}
+
+.igrovoe_pole{
+    grid-area: b;
+}
+
+.pcinfo{
+    grid-area: c;
+}
+
+.plname{
+    margin-bottom: 10px;
+    font-size: large;
+}
+
+.contbutton, .contbutton_hide{
+    margin: 20px auto;
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(4, 50px);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+    ". a a ."
+    "b b c c"
+    ". d d .";
+}
+
+.contbutton_hide{
+    display: none;
+}
+
+#buttonVv{
+    grid-area: a;
+}
+#buttonLv{
+    grid-area: b;
+}
+#buttonPr{
+    grid-area: c;
+}
+#buttonVn{
+    grid-area: d;
+}
+
+.button, .hide{
+    cursor: pointer;
+    background-color: antiquewhite;
+    border: 1px yellow solid;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    font-size: large;
+    width: 50px;
+}
+
+.button_hide{
+    visibility: hidden;
+}
+
+.Button_NG{
+    cursor: pointer;
+    background-color: antiquewhite;
+    border: 1px yellow solid;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    font-size: large;
+    width: 50%;
+}
+
+.pole{
+
+}
+
+.stroki{
+    display: flex;
+    
+}
+
+.stolbtsi, .cell{
+    width: 30px;
+    height: 30px;
+    background: #a8ffd2;
+    border: 1px solid black;
+    text-align: center;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cell{
+    background:gray;
+    color: gray;
+}
+img{
+    width: 90%;
+    height: 90%;
+}
+
+.pointer_class{
+    cursor: pointer;
+}
+
+#pl_info_battle_monstr, #pc_info_battle_monstr,
+#pl_info_battle, #pc_info_battle{
+    display: none;
+    border: yellowgreen solid 3px;
+    background-color: lightyellow;
+    border-radius: 10px;
+    box-shadow:  0px 0px 20px 5px cornsilk ;
+    margin: 10px 0px;
+    padding: 10px;
+}
